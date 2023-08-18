@@ -1,0 +1,21 @@
+From: Enneamer <enneamer@enneamer.is>
+Date: Sun, 11 Jun 2023 12:37:06 +0800
+Subject: fix: do not timeout on decryption
+
+---
+ contrib/dracut/90zfs/zfs-load-key.sh.in | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/contrib/dracut/90zfs/zfs-load-key.sh.in b/contrib/dracut/90zfs/zfs-load-key.sh.in
+index d916f43..ff7fda3 100755
+--- a/contrib/dracut/90zfs/zfs-load-key.sh.in
++++ b/contrib/dracut/90zfs/zfs-load-key.sh.in
+@@ -34,7 +34,7 @@ _load_key_cb() {
+     case "${KEYLOCATION%%://*}" in
+         prompt)
+             for _ in 1 2 3; do
+-                systemd-ask-password --no-tty "Encrypted ZFS password for ${dataset}" | zfs load-key "${ENCRYPTIONROOT}" && break
++                systemd-ask-password --no-tty --timeout=0 "Encrypted ZFS password for ${dataset}" | zfs load-key "${ENCRYPTIONROOT}" && break
+             done
+             ;;
+         http*)
